@@ -1,0 +1,116 @@
+#VRML_SIM R2025a utf8
+PROTO ParkingSensorRobot [
+  field SFVec3f    translation      0 0 0        # Position of the sensor robot
+  field SFRotation rotation         0 0 1 0      # Rotation of the sensor robot
+  field SFString   name             "sensor_robot" # Unique name for the robot
+  field SFVec3f    sensorTranslation 0.05 0 1.0  # Translation for sensor (default: x=0.05, y=0, z=1.0)
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller "parking_sensor_controller"    # Controller for this robot
+
+    children [
+      # Vertical Sensor Mount (Wider structure)
+      Transform {
+        translation 0 0 1.0  # Center of the mount at 1m height (half of 2m)
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7  # Light gray for the mount
+              }
+            }
+            geometry Box {
+              size 0.1 0.5 2.0  # 0.1m thick (x) x 0.5m wide (y) x 2m tall (z)
+            }
+          }
+        ]
+      }
+
+      # Sensor Placement on the Mount
+      Transform {
+        translation IS sensorTranslation  # Bind the full translation vector (0.05 0 1.0)
+        rotation 0 1 0 1.57              # Rotate 90 degrees around y-axis to point along positive x-axis (toward car)
+        children [
+          DistanceSensor {
+            name "parking_sensor"
+            lookupTable [
+              0.0 0.0 0.0,    # Min range (0m)
+              5.0 5.0 0.0     # Max range (5m)
+            ]
+            resolution 0.01
+          }
+
+          # Visual Indicator for Sensor (Two Circles)
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0  # Red color for visibility
+                  }
+                }
+                geometry Sphere { radius 0.05 }  # First circle
+              }
+            ]
+          }
+          
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0  # Red color for visibility
+                  }
+                }
+                geometry Sphere { radius 0.05 }  # Second circle
+              }
+            ]
+          }
+        ]
+      }
+
+      # Arrow to Show Sensor Direction
+      Transform {
+        translation 0.20 0 1.0  # Adjusted to align with sensor direction (pointing along x-axis)
+        rotation 0 1 0 1.57     # Align with sensor direction (pointing along x-axis)
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0  # Red color
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+
+      # Display for Interface
+      Display {
+        width 200
+        height 100
+        name "sensor_display"
+        translation 0 0 2.0  # Position above the mount for visibility
+      }
+    ]
+
+    # Bounding Object for the Robot (Matches the mount)
+    boundingObject Transform {
+      translation 0 0 1.0
+      children [
+        Box { 
+          size 0.1 0.5 2.0  # Matches the new mount dimensions
+        }
+      ]
+    }
+  }
+}

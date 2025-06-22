@@ -1,0 +1,87 @@
+#VRML_SIM R2025a utf8
+
+PROTO GateRobot [
+  field SFVec3f translation 0 0 0
+  field SFRotation rotation 0 0 1 0
+  field SFString name "GateRobot"
+] {
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    children [
+
+      # Left Pillar
+      Transform {
+        translation -2.0 0 1.0
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 1
+              }
+            }
+            geometry Box {
+              size 0.2 0.2 2.0
+            }
+          }
+        ]
+      }
+
+      # Right Pillar
+      Transform {
+        translation 2.0 0 1.0
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 1
+              }
+            }
+            geometry Box {
+              size 0.2 0.2 2.0
+            }
+          }
+        ]
+      }
+
+      # Entry Camera (Facing Entry Side)
+      Transform {
+        translation -1.5 -2 1.5
+        rotation 0 1 0 0# Facing entry side
+        children [
+          Camera {
+            name "entry_camera"
+            width 640
+            height 480
+            fieldOfView 1.0
+          }
+        ]
+      }
+
+      # Exit Camera (Facing Exit Side)
+      Transform {
+        translation 1.5 0 1.5
+        rotation 1 1 0 3.14 # Facing exit side
+        children [
+          Camera {
+            name "exit_camera"
+            width 640
+            height 480
+            fieldOfView 1.0
+          }
+        ]
+      }
+
+      # Emitters
+      Emitter {
+        name "entry_emitter"
+      }
+      Emitter {
+        name "exit_emitter"
+      }
+    ]
+
+    controller "gate_robot_controller"
+  }
+}

@@ -1,0 +1,109 @@
+#VRML_SIM R2025a utf8
+PROTO ParkingUltra [
+  field SFVec3f    translation      0 0 0        # Position of the sensor robot
+  field SFRotation rotation         0 0 1 0      # Rotation of the sensor robot
+  field SFString   name             "parkingultra" # Unique name for the robot
+  field SFVec3f    sensorTranslation 0.25 0 0.25  # Translation for sensor (moved to front edge of cube)
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller "parking_ultra"    # Controller for this robot
+
+    children [
+      # Vertical Sensor Mount (Cube structure)
+      Transform {
+        translation 0 0 0.25  # Center of the cube at 0.25 m height (half of 0.5 m)
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7  # Light gray for the mount
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5  # Cube with equal sides (0.5m x 0.5m x 0.5m)
+            }
+          }
+        ]
+      }
+
+      # Ultrasonic Sensor Placement on the Front
+      Transform {
+        translation IS sensorTranslation  # Bind the full translation vector (0.25 0 0.25)
+        rotation 0 1 0 1.57              # Rotate 90 degrees around y-axis to point along positive x-axis
+        children [
+          # Functional Ultrasonic Sensor
+          DistanceSensor {
+            name "ultrasonic_sensor"
+            lookupTable [
+              0.02 0.02 0.0,  # Min range (0.02m, typical for ultrasonic sensors)
+              4.0 4.0 0.0     # Max range (4m, typical for ultrasonic sensors)
+            ]
+            resolution 0.001   # Higher resolution for ultrasonic precision (1mm)
+            aperture 0.52      # ~30 degrees FOV (0.52 radians), typical for ultrasonic sensors
+            noise 0.01         # Small noise factor to simulate real ultrasonic behavior
+          }
+
+          # Visible Ultrasonic Sensor Representation (Larger Cylinder)
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 1  # Blue color for the ultrasonic sensor
+              }
+            }
+            geometry Cylinder {
+              height 0.04       # Increased height for better visibility
+              radius 0.03       # Increased radius to mimic a real ultrasonic sensor
+            }
+          }
+        ]
+      }
+
+      # Arrow to Show Sensor Direction
+      Transform {
+        translation 0.35 0 0.25  # Moved further forward to align with new sensor position
+        rotation 0 1 0 1.57     # Align with sensor direction (pointing along positive x-axis)
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 1  # Blue color to match sensor
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+
+      # Display for Interface
+      Display {
+        width 200
+        height 100
+        name "ultra_display"
+        translation 0 0 0.5  # Adjusted above the cube (top at 0.5 m)
+      }
+    ]
+
+    # Bounding Object for the Robot (Matches the cube)
+    boundingObject Transform {
+      translation 0 0 0.25
+      children [
+        Box { 
+          size 0.5 0.5 0.5  # Matches the cube dimensions
+        }
+      ]
+    }
+
+    # Physics node to allow movement
+    physics Physics {
+      density -1  # Use mass instead of density
+      mass 1.0    # 1 kg mass for the robot
+    }
+  }
+}

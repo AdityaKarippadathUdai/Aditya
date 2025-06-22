@@ -1,0 +1,737 @@
+#VRML_SIM R2025a utf8
+PROTO ParkingSlot6(2) [
+  field SFVec3f    translation      0 0 0        # Position of the parking system
+  field SFRotation rotation         0 0 1 0      # Rotation of the parking system
+  field SFString   name             "parking_system_2" # Unique name for the system
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    name IS name
+    controller "parking_sql"    # Controller for this parking system
+
+    children [
+      # Sensor Mount 1 (at x = 0)
+      Transform {
+        translation 0 0 0.25  # Spacing: 0m; cube center at 0.25m height
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7  # Light gray for the mount
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5  # Cube with equal sides (0.5m x 0.5m x 0.5m)
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 1
+      Transform {
+        translation 0 0 0.75  # Above the cube (0.25m + 0.5m height)
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 1"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 0.05 0 0.25  # Sensor offset 0.05m along x from cube center
+        rotation 0 1 0 1.57      # Rotate 90 degrees around y-axis to point along positive x-axis
+        children [
+          DistanceSensor {
+            name "parking_sensor_1"  # Unique name
+            lookupTable [
+              0.0 0.0 0.0,    # Min range (0m)
+              5.0 5.0 0.0     # Max range (5m)
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0  # Offset along y-axis (local y becomes z in world)
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0  # Red color for visibility
+                  }
+                }
+                geometry Sphere { radius 0.05 }  # First red circle
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0  # Offset along y-axis (local y becomes z in world)
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0  # Red color for visibility
+                  }
+                }
+                geometry Sphere { radius 0.05 }  # Second red circle
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 0.15 0 0.25  # Arrow position
+        rotation 0 1 0 1.57      # Align with sensor direction
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0  # Red color
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      # Two Black Dots Along Sensor Direction (positive x-axis after rotation)
+      Transform {
+        translation 0.25 0 0.25  # First dot at 0.25m from sensor
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black color
+              }
+            }
+            geometry Sphere { radius 0.03 }  # Smaller sphere for dot
+          }
+        ]
+      }
+      Transform {
+        translation 0.45 0 0.25  # Second dot at 0.45m from sensor
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black color
+              }
+            }
+            geometry Sphere { radius 0.03 }  # Smaller sphere for dot
+          }
+        ]
+      }
+
+      # Sensor Mount 2 (at x = 3)
+      Transform {
+        translation 3 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 2
+      Transform {
+        translation 3 0 0.75
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 2"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 3.05 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          DistanceSensor {
+            name "parking_sensor_2"
+            lookupTable [
+              0.0 0.0 0.0,
+              5.0 5.0 0.0
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 3.15 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 3.25 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+      Transform {
+        translation 3.45 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+
+      # Sensor Mount 3 (at x = 6)
+      Transform {
+        translation 6 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 3
+      Transform {
+        translation 6 0 0.75
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 3"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 6.05 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          DistanceSensor {
+            name "parking_sensor_3"
+            lookupTable [
+              0.0 0.0 0.0,
+              5.0 5.0 0.0
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 6.15 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 6.25 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+      Transform {
+        translation 6.45 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+
+      # Sensor Mount 4 (at x = 9)
+      Transform {
+        translation 9 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 4
+      Transform {
+        translation 9 0 0.75
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 4"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 9.05 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          DistanceSensor {
+            name "parking_sensor_4"
+            lookupTable [
+              0.0 0.0 0.0,
+              5.0 5.0 0.0
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 9.15 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 9.25 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+      Transform {
+        translation 9.45 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+
+      # Sensor Mount 5 (at x = 12)
+      Transform {
+        translation 12 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 5
+      Transform {
+        translation 12 0 0.75
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 5"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 12.05 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          DistanceSensor {
+            name "parking_sensor_5"
+            lookupTable [
+              0.0 0.0 0.0,
+              5.0 5.0 0.0
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 12.15 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 12.25 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+      Transform {
+        translation 12.45 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+
+      # Sensor Mount 6 (at x = 15)
+      Transform {
+        translation 15 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0.7 0.7 0.7
+              }
+            }
+            geometry Box {
+              size 0.5 0.5 0.5
+            }
+          }
+        ]
+      }
+      # Identification Label for Slot 6
+      Transform {
+        translation 15 0 0.75
+        scale 0.2 0.2 0.2    # Adjust text size
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0  # Black text
+              }
+            }
+            geometry Text {
+              string ["Slot 6"]  # Corrected string format
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 15.05 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          DistanceSensor {
+            name "parking_sensor_6"
+            lookupTable [
+              0.0 0.0 0.0,
+              5.0 5.0 0.0
+            ]
+            resolution 0.01
+          }
+          Transform {
+            translation 0 0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+          Transform {
+            translation 0 -0.1 0
+            children [
+              Shape {
+                appearance Appearance {
+                  material Material {
+                    diffuseColor 1 0 0
+                  }
+                }
+                geometry Sphere { radius 0.05 }
+              }
+            ]
+          }
+        ]
+      }
+      Transform {
+        translation 15.15 0 0.25
+        rotation 0 1 0 1.57
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 1 0 0
+              }
+            }
+            geometry Cone {
+              bottomRadius 0.05
+              height 0.1
+            }
+          }
+        ]
+      }
+      Transform {
+        translation 15.25 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+      Transform {
+        translation 15.45 0 0.25
+        children [
+          Shape {
+            appearance Appearance {
+              material Material {
+                diffuseColor 0 0 0
+              }
+            }
+            geometry Sphere { radius 0.03 }
+          }
+        ]
+      }
+
+      # Display for Interface (Positioned at the end of the system)
+      Display {
+        width 200
+        height 100
+        name "sensor_display"
+        translation 18 0 0.5  # Adjusted to 15m + 3m offset
+      }
+    ]
+
+    # Bounding Object for the Entire System
+    boundingObject Transform {
+      translation 7.5 0 0.25  # Centered at the middle of the 6 sensors (15m / 2)
+      children [
+        Box { 
+          size 18 0.5 0.5  # Spans 18m (6 sensors x 3m spacing) x 0.5m x 0.5m
+        }
+      ]
+    }
+  }
+}
